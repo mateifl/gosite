@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from kifudb.models import Kifu
 # Create your views here.
 
@@ -14,3 +13,7 @@ class LastGamesView(ListView):
 class GameView(DetailView):
     template_name = "view_game.html"
     model = Kifu
+
+
+class FrontPageView(TemplateView):
+    template_name = "front.html"
