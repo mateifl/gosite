@@ -4,28 +4,75 @@ from django.db import models
 class KifuGroup(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Group"
+        verbose_name_plural = "Groups"
+
 
 class Player(models.Model):
-    first_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255)
-    rank = models.CharField(max_length=5)
-    birth_date = models.DateField()
+    middle_name = models.CharField(max_length=255, null=True, blank=True)
+    rank = models.CharField(max_length=5, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        v = self.last_name
+        if self.last_name is not None:
+            v = v + " " + self.first_name
+        return v
+
+    class Meta:
+        verbose_name = "Player"
+        verbose_name_plural = "Players"
 
 
 class Kifu(models.Model):
     game_text = models.TextField()
-    game_date = models.DateField()
-    place = models.CharField(max_length=255)
-    white_player = models.ForeignKey(Player, related_name="white")
-    black_player = models.ForeignKey(Player, related_name="black")
-    groups = models.ManyToManyField(KifuGroup)
-    description = models.TextField()
+    game_date = models.DateField(null=True, blank=True)
+    place = models.CharField(max_length=255, null=True, blank=True)
+    white_player = models.ForeignKey(Player, related_name="white", null=True, blank=True)
+    black_player = models.ForeignKey(Player, related_name="black", null=True, blank=True)
+    groups = models.ManyToManyField(KifuGroup, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    one_line_description = models.CharField(max_length=255, null=True, blank=True)
+
+    def get_absolute_url(self):
+        return "game" + "/" + str(self.id)
+
+
+    def to_string(self):
+        v = ""
+        if self.black_player is not None:
+            v = v + " " + self.black_player.last_name
+        if self.white_player is not None:
+            v = v + " " + self.white_player.last_name
+        if self.one_line_description is not None:
+            v = v + self.one_line_description
+        if v == "":
+            v = "Game " + str(self.id)
+        return v
+
+
+    def __str__(self):
+        return self.to_string()
+
+
+    def __unicode__(self):
+        return self.to_string()
+
+
+    class Meta:
+        verbose_name = "Game"
+        verbose_name_plural = "Games"
 
 
 class Position(models.Model):
     position_text = models.TextField()
-    game = models.ForeignKey('Kifu')
+    game = models.ForeignKey(Kifu)
 
 
 class KifuComment(models.Model):

@@ -1,3 +1,7 @@
 from django.contrib import admin
+from kifudb.models import Kifu, Player, KifuGroup
 
-# Register your models here.
+admin.site.register(Kifu)
+admin.site.register(Player)
+admin.site.register(KifuGroup)
+
