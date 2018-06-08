@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from kifudb.views import FrontPageView, TestGameView
+from kifudb.views import FrontPageView, TestGameView, BaseListView
 
 urlpatterns = [
-    url(r'^$', FrontPageView.as_view(), name='home'),
+    url(r'^$', BaseListView.as_view(), name='home'),
     url(r'^admin/', admin.site.urls),
-    url(r'^test-game-view/', TestGameView.as_view(), name='test-game-view')
-    # url(r'^list-games/', )
+    url(r'^test-game-view/', TestGameView.as_view(), name='test-game-view'),
+    url(r'^group/(?P<group_name>[\w|-]+)', BaseListView.as_view(), name='game-by-group'),
+    url(r'^tag/(?P<tag_name>[\w|-]+)', BaseListView.as_view(), name='game-by-tag')
 ]

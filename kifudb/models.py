@@ -1,15 +1,45 @@
 from django.db import models
+from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
 
 
 class KifuGroup(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('game-by-group', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(KifuGroup, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Group"
+        verbose_name_plural = "Groups"
+
+
+class KifuTag(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('game-by-tag', args=[self.name.lower()])
+
     class Meta:
-        verbose_name = "Group"
-        verbose_name_plural = "Groups"
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
 
 
 class Player(models.Model):
