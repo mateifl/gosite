@@ -16,7 +16,7 @@
 					<h3>Latest games added</h3>
                     {% for kifu in KIFUS %}
                     <div>
-                        <a href="{{ kifu.get_absolute_url }}">{{ kifu.black_player }} - {{ kifu.black_player }}</a>
+                        <a href="/{{ kifu.get_absolute_url }}">{{ kifu.black_player }} - {{ kifu.black_player }}</a>
                     </div>
                     {% endfor %}
 				</div>
@@ -24,7 +24,7 @@
 					<h3>Groups</h3>
                     {% for group in GROUPS %}
                     <div>
-                        <a href="{{ group.slug }}">{{ group.name }}</a>
+                        <a href="/group/{{ group.slug }}">{{ group.name }}</a>
                     </div>
                     {% endfor %}
 				</div>
