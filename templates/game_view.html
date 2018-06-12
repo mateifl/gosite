@@ -3,14 +3,16 @@
 <head>
 	<meta charset="utf-8">
 	<title>WGo</title>
-	<script type="text/javascript" src="wgo/wgo.min.js"></script>
-	<script type="text/javascript" src="wgo/wgo.player.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="wgo/wgo.player.css" />
+	<script type="text/javascript" src="/static/wgo/wgo.min.js"></script>
+	<script type="text/javascript" src="/static/wgo/wgo.player.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/wgo/wgo.player.css" />
 </head>
 <body>
 
 
-    <h2>this is a test</h2>
-
+    <h2>Game view: {{GAME.one_line_description}} </h2>
+	<div data-wgo="{{GAME.game_text}}" >
+        {{GAME.game_text}}
+	</div>
 </body>
 </html>

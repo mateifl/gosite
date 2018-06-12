@@ -37,11 +37,18 @@ class BaseListView(TemplateView):
         return context
 
 
-class GameView(DetailView):
+class GameView(TemplateView):
     template_name = "game_view.html"
     model = Kifu
 
-
+    def get_context_data(self, **kwargs):
+        context = super(GameView, self).get_context_data(**kwargs)
+        kifu_id = kwargs['kifu_id']
+        print("Kifu id = " + kifu_id)
+        game = Kifu.objects.get(pk= int(kifu_id))
+        print(game)
+        context['GAME'] = game
+        return context
 
 class TestGameView(TemplateView):
     template_name = "game_view.html"
