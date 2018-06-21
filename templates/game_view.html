@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="/static/wgo/sgfparser.js"></script>
 	<script type="text/javascript" src="/static/wgo/player.js"></script>
 	<script type="text/javascript" src="/static/wgo/basicplayer.js"></script>
-	<script type="text/javascript" src="/static/wgo/basicplayer.component.js"></script>
+	<script type="text/javascrimpt" src="/static/wgo/basicplayer.component.js"></script>
 	<script type="text/javascript" src="/static/wgo/basicplayer.infobox.js"></script>
 	<script type="text/javascript" src="/static/wgo/basicplayer.commentbox.js"></script>
 	<script type="text/javascript" src="/static/wgo/basicplayer.control.js"></script>
@@ -25,14 +25,14 @@
 <body>
 <div class="container">
     <div class="row">
-		<div class="span9">
+		<div class="span12">
 
             <h2>Game view: {{GAME.one_line_description}} </h2>
 
             <div id="game-div"
                  data-wgo="{{GAME.game_text}}"
-                 data-wgo-layout="left: ['InfoBox', 'CommentBox'], bottom: ['Control']"
-                 class="wgo-twocols">
+                 data-wgo-layout="right: ['InfoBox', 'CommentBox'], top: ['Control']" class="wgo-threecols"
+                 >
 
             </div>
         </div>

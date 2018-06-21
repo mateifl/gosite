@@ -3,45 +3,10 @@ body {
     padding-top: 60px;
 }
 
-.icon-friends {
-    background-image: url("../img/friends.png");
-    background-position: center center;
+.wgo-threecols .wgo-player-left, .wgo-threecols  .wgo-player-right  {
+	width: 30%;
 }
 
-/* css for timepicker */
-.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
-.ui-timepicker-div dl { text-align: left; }
-.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
-.ui-timepicker-div td { font-size: 90%; }
-.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
-
-.margin-bottom {
-	margin-bottom: 15px;
-}
-
-.margin-bottom-big {
-	margin-bottom: 30px;
-}
-
-.margin-up-bottom {
-	margin-bottom: 15px;
-	margin-top: 15px;	
-}
-
-.margin-up-bottom-big {
-	margin-bottom: 30px;
-	margin-top: 30px;	
-}
-
-.margin-top-big {
-	margin-top: 30px;	
-}
-
-.comment-display {
-	width: 540px;
-}
-
-.comment-content {
-    margin-top: 15px;
+.wgo-threecols .wgo-player-center {
+	width: 69%;
 }

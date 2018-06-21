@@ -71,7 +71,7 @@ class Kifu(models.Model):
     one_line_description = models.CharField(max_length=255, null=True, blank=True)
 
     def get_absolute_url(self):
-        return "game" + "/" + str(self.id)
+        return "game/" + str(self.id)
 
 
     def to_string(self):

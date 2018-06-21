@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from kifudb.models import Kifu, KifuGroup
+from django.views import View
 
 
 def load_games(load_type = None):
@@ -50,6 +51,28 @@ class GameView(TemplateView):
         context['GAME'] = game
         return context
 
-class TestGameView(TemplateView):
-    template_name = "game_view.html"
 
+class GameViewSabaki(TemplateView):
+    template_name = "game_view_sabaki.html"
+    model = Kifu
+
+    def get_context_data(self, **kwargs):
+        context = super(GameViewSabaki, self).get_context_data(**kwargs)
+        kifu_id = kwargs['kifu_id']
+        print("Kifu id = " + kifu_id)
+        game = Kifu.objects.get(pk= int(kifu_id))
+        print(game)
+        game.game_text = game.game_text.replace('\n', '')
+        print(game.game_text)
+        context['GAME'] = game
+        return context
+
+
+class UpdateGameView(View):
+
+    def post(self, request):
+        kifu_id = request['id']
+        sgf = request['sgf']
+        kifu = Kifu.objects.get(pk= int(kifu_id))
+        kifu.game_text = sgf
+        kifu.save()

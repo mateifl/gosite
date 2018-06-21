@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Game</title>
+	<link rel="stylesheet" type="text/css" href="/static/style/app.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style/goban.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style/index.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style/comments.css" />
+
+</head>
+<body>
+	<script type="text/javascript" src="/static/bundle.js" ></script>
+<script>
+function slashEscape(contents) {
+    return contents
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n');
+}
+
+
+        sabaki.loadContent(slashEscape('{{GAME.game_text}}'), 'sgf', { ignoreEncoding: true });
+		sabaki.events.on('vertexClick', () => {
+			var sgfText = sabaki.getSGF();
+
+		});
+
+</script>
+<span id="kifu_id">{{GAME.id}}</span>
+</body>
+</html>
