@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from kifudb.models import Kifu, KifuGroup
 from django.views import View
+from django.http import HttpResponse
 
 
 def load_games(load_type = None):
@@ -70,9 +71,10 @@ class GameViewSabaki(TemplateView):
 
 class UpdateGameView(View):
 
-    def post(self, request):
-        kifu_id = request['id']
-        sgf = request['sgf']
+    def post(self, request, *args, **kwargs):
+        kifu_id = request.POST['game_id']
+        sgf = request.POST['game_text']
         kifu = Kifu.objects.get(pk= int(kifu_id))
         kifu.game_text = sgf
         kifu.save()
+        return HttpResponse('')

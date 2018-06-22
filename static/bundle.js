@@ -17484,7 +17484,7 @@ class PlayBar extends Component {
             class: classNames('name', { engine: isEngine[1] }),
             title: isEngine[1] && 'Engine'
         }, playerNames[1] || 'White'), ' ', playerRanks[1] && h('span', { class: 'rank' }, playerRanks[1]), ' ', h('span', { class: 'captures', style: captureStyle(1) }, playerCaptures[1])), h('img', {
-            src: `./img/ui/player_${currentPlayer}.svg`,
+            src: `/static/img/ui/player_${currentPlayer}.svg`,
             class: 'current-player',
             height: 22,
             title: 'Change Player',
@@ -18743,7 +18743,7 @@ class InfoDrawer extends Component {
             onInput: this.handleInputChange.blackName
         })), h('img', {
             class: 'current-player',
-            src: `/static/game/img/ui/player_${currentPlayer}.svg`,
+            src: `/static/img/ui/player_${currentPlayer}.svg`,
             height: 31,
             title: 'Swap',
             onClick: this.handleSwapPlayers

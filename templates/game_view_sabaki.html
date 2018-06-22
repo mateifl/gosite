@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+{% load static %}
 <html>
 <head>
 	<meta charset="utf-8">
@@ -7,26 +8,47 @@
     <link rel="stylesheet" type="text/css" href="/static/style/goban.css" />
     <link rel="stylesheet" type="text/css" href="/static/style/index.css" />
     <link rel="stylesheet" type="text/css" href="/static/style/comments.css" />
-
+    <script src="{% static 'jquery-3.3.1.min.js' %}"  type="text/javascript" ></script>
 </head>
 <body>
 	<script type="text/javascript" src="/static/bundle.js" ></script>
-<script>
-function slashEscape(contents) {
-    return contents
-        .replace(/\\/g, '\\\\')
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, '\\n');
-}
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
 
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
 
-        sabaki.loadContent(slashEscape('{{GAME.game_text}}'), 'sgf', { ignoreEncoding: true });
+        sabaki.loadContent('{{GAME.game_text}}', 'sgf', { ignoreEncoding: true });
 		sabaki.events.on('vertexClick', () => {
 			var sgfText = sabaki.getSGF();
-
+			var game_id = document.getElementById("kifu_id").innerHTML;
+            jQuery.post( "http://127.0.0.1:8000/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
 		});
 
-</script>
+    </script>
 <span id="kifu_id">{{GAME.id}}</span>
 </body>
 </html>
