@@ -61,9 +61,12 @@ class GameViewSabaki(TemplateView):
         context = super(GameViewSabaki, self).get_context_data(**kwargs)
         kifu_id = kwargs['kifu_id']
         print("Kifu id = " + kifu_id)
-        game = Kifu.objects.get(pk= int(kifu_id))
-        print(game)
-        game.game_text = game.game_text.replace('\n', '')
+        game = Kifu.objects.get(pk = int(kifu_id))
+        t = game.game_text
+        print(t)
+        t = t.replace('\r', '')
+        t = t.replace('\n', '')
+        game.game_text = t
         print(game.game_text)
         context['GAME'] = game
         return context

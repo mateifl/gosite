@@ -16,7 +16,7 @@
 					<h3>Latest games added</h3>
                     {% for kifu in KIFUS %}
                     <div>
-                        <a href="/{{ kifu.get_absolute_url }}">{{ kifu.black_player }} - {{ kifu.black_player }}</a>
+                        <a href="/{{ kifu.get_absolute_url }}">{{ kifu.to_string }}</a>
                     </div>
                     {% endfor %}
 				</div>

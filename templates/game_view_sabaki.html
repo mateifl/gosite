@@ -45,7 +45,13 @@
 		sabaki.events.on('vertexClick', () => {
 			var sgfText = sabaki.getSGF();
 			var game_id = document.getElementById("kifu_id").innerHTML;
-            jQuery.post( "http://127.0.0.1:8000/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
+            jQuery.post( "/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
+		});
+
+		sabaki.events.on('toolUse', () => {
+			var sgfText = sabaki.getSGF();
+			var game_id = document.getElementById("kifu_id").innerHTML;
+            jQuery.post( "/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
 		});
 
     </script>

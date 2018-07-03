@@ -77,11 +77,11 @@ class Kifu(models.Model):
     def to_string(self):
         v = ""
         if self.black_player is not None:
-            v = v + " " + self.black_player.last_name
+            v = v + " " + self.black_player.last_name + "(B)"
         if self.white_player is not None:
-            v = v + " " + self.white_player.last_name
+            v = v + " vs. " + self.white_player.last_name + "(W)"
         if self.one_line_description is not None:
-            v = v + self.one_line_description
+            v = v + " - " + self.one_line_description
         if v == "":
             v = "Game " + str(self.id)
         return v
