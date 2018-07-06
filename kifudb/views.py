@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from kifudb.models import Kifu, KifuGroup
 from django.views import View
 from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def load_games(load_type = None):
@@ -39,7 +40,7 @@ class BaseListView(TemplateView):
         return context
 
 
-class GameView(TemplateView):
+class GameView(LoginRequiredMixin, TemplateView):
     template_name = "game_view.html"
     model = Kifu
 
@@ -48,12 +49,11 @@ class GameView(TemplateView):
         kifu_id = kwargs['kifu_id']
         print("Kifu id = " + kifu_id)
         game = Kifu.objects.get(pk= int(kifu_id))
-        print(game)
         context['GAME'] = game
         return context
 
 
-class GameViewSabaki(TemplateView):
+class GameViewSabaki(LoginRequiredMixin, TemplateView):
     template_name = "game_view_sabaki.html"
     model = Kifu
 
@@ -63,11 +63,9 @@ class GameViewSabaki(TemplateView):
         print("Kifu id = " + kifu_id)
         game = Kifu.objects.get(pk = int(kifu_id))
         t = game.game_text
-        print(t)
         t = t.replace('\r', '')
         t = t.replace('\n', '')
         game.game_text = t
-        print(game.game_text)
         context['GAME'] = game
         return context
 
@@ -81,3 +79,12 @@ class UpdateGameView(View):
         kifu.game_text = sgf
         kifu.save()
         return HttpResponse('')
+
+
+class SearchView(TemplateView):
+    template_name = "search.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+
+        return context
