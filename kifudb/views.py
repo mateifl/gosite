@@ -1,14 +1,14 @@
 from django.views.generic import ListView, DetailView, TemplateView
 from kifudb.models import Kifu, KifuGroup
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def load_games(load_type = None):
     if load_type is None:
         # load last 20 games for the front page
-        return Kifu.objects.all()[:20]
+        return Kifu.objects.all()
     elif load_type[0] == 'Group':
         print("loading games from " + load_type[1])
         return Kifu.objects.filter(groups__slug = load_type[1])
@@ -55,18 +55,30 @@ class GameView(LoginRequiredMixin, TemplateView):
 
 class GameViewSabaki(LoginRequiredMixin, TemplateView):
     template_name = "game_view_sabaki.html"
-    model = Kifu
 
     def get_context_data(self, **kwargs):
         context = super(GameViewSabaki, self).get_context_data(**kwargs)
-        kifu_id = kwargs['kifu_id']
-        print("Kifu id = " + kifu_id)
-        game = Kifu.objects.get(pk = int(kifu_id))
-        t = game.game_text
-        t = t.replace('\r', '')
-        t = t.replace('\n', '')
-        game.game_text = t
-        context['GAME'] = game
+        # if 'kifu_id' in kwargs:
+        #     print(kwargs['kifu_id'])
+        # else:
+        #     print("game id not found")
+
+        print(self.request.path)
+        if self.request.path == "/game/new/":
+            game = Kifu()
+            game.save()
+            kifu_id = game.id
+            context['GAME_ID'] = kifu_id
+        else:
+            kifu_id = kwargs['kifu_id']
+            # print("Kifu id = " + kifu_id)
+            game = Kifu.objects.get(pk = int(kifu_id))
+            t = game.game_text
+            t = t.replace('\r', '')
+            t = t.replace('\n', '')
+            game.game_text = t
+            context['GAME_ID'] = kifu_id
+            context['GAME'] = game
         return context
 
 
@@ -75,7 +87,7 @@ class UpdateGameView(View):
     def post(self, request, *args, **kwargs):
         kifu_id = request.POST['game_id']
         sgf = request.POST['game_text']
-        kifu = Kifu.objects.get(pk= int(kifu_id))
+        kifu = Kifu.objects.get(pk=int(kifu_id))
         kifu.game_text = sgf
         kifu.save()
         return HttpResponse('')

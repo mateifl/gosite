@@ -66,34 +66,30 @@ class Kifu(models.Model):
     place = models.CharField(max_length=255, null=True, blank=True)
     white_player = models.ForeignKey(Player, related_name="white", null=True, blank=True)
     black_player = models.ForeignKey(Player, related_name="black", null=True, blank=True)
-    groups = models.ManyToManyField(KifuGroup, null=True, blank=True)
+    groups = models.ManyToManyField(KifuGroup, blank=True)
     description = models.TextField(null=True, blank=True)
     one_line_description = models.CharField(max_length=255, null=True, blank=True)
 
     def get_absolute_url(self):
         return "game/" + str(self.id)
 
-
     def to_string(self):
         v = ""
         if self.black_player is not None:
-            v = v + " " + self.black_player.last_name + "(B)"
+            v = v + " " + self.black_player.first_name + " " + self.black_player.last_name + "(B)"
         if self.white_player is not None:
-            v = v + " vs. " + self.white_player.last_name + "(W)"
+            v = v + " vs. " + self.white_player.first_name + " " + self.white_player.last_name + "(W)"
         if self.one_line_description is not None:
             v = v + " - " + self.one_line_description
         if v == "":
             v = "Game " + str(self.id)
         return v
 
-
     def __str__(self):
         return self.to_string()
 
-
     def __unicode__(self):
         return self.to_string()
-
 
     class Meta:
         verbose_name = "Game"

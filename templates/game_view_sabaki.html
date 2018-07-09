@@ -11,6 +11,7 @@
     <script src="{% static 'jquery-3.3.1.min.js' %}"  type="text/javascript" ></script>
 </head>
 <body>
+    <span id="kifu_id">{{GAME_ID}}</span>
 	<script type="text/javascript" src="/static/bundle.js" ></script>
     <script>
         function getCookie(name) {
@@ -41,11 +42,15 @@
             }
         });
 
-        sabaki.loadContent('{{GAME.game_text}}', 'sgf', { ignoreEncoding: true });
+        {% if GAME is not None %}
+            sabaki.loadContent('{{GAME.game_text}}', 'sgf', { ignoreEncoding: true });
+        {% endif %}
+
 		sabaki.events.on('vertexClick', () => {
 			var sgfText = sabaki.getSGF();
 			var game_id = document.getElementById("kifu_id").innerHTML;
-            jQuery.post( "/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
+			console.log("game id = " + game_id);
+            jQuery.post( "/game-update/", { 'game_text': sgfText, 'game_id': game_id}, function(data) { console.log(data); } );
 		});
 
 		sabaki.events.on('toolUse', () => {
@@ -55,6 +60,7 @@
 		});
 
     </script>
-<span id="kifu_id">{{GAME.id}}</span>
+
+
 </body>
 </html>
