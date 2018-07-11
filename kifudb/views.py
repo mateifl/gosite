@@ -3,9 +3,10 @@ from kifudb.models import Kifu, KifuGroup
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from kifudb.utils import LoggerMixin
 
 
-def load_games(load_type = None):
+def load_games(load_type=None):
     if load_type is None:
         # load last 20 games for the front page
         return Kifu.objects.all()
@@ -17,12 +18,12 @@ def load_games(load_type = None):
         return Kifu.objects.filter(tag__slug = load_type[1])
 
 
-class BaseListView(TemplateView):
+class BaseListView(LoggerMixin, TemplateView):
     template_name = "front.html"
 
     def get_context_data(self, **kwargs):
         context = super(BaseListView, self).get_context_data(**kwargs)
-        print(self.kwargs)
+        self.logger.debug(self.kwargs)
         kifus = []
         if not self.kwargs:
             kifus = load_games()
@@ -31,7 +32,7 @@ class BaseListView(TemplateView):
         if 'tag_name' in self.kwargs:
             kifus = load_games(('Tag', self.kwargs['tag_name']))
 
-        print("Found " + str(len(kifus)) + " games")
+        self.logger.debug("Found " + str(len(kifus)) + " games")
         context['KIFUS'] = kifus
 
         groups = KifuGroup.objects.all()
@@ -40,30 +41,25 @@ class BaseListView(TemplateView):
         return context
 
 
-class GameView(LoginRequiredMixin, TemplateView):
-    template_name = "game_view.html"
-    model = Kifu
+# class GameView(LoginRequiredMixin, TemplateView):
+#     template_name = "game_view.html"
+#     model = Kifu
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(GameView, self).get_context_data(**kwargs)
+#         kifu_id = kwargs['kifu_id']
+#         print("Kifu id = " + kifu_id)
+#         game = Kifu.objects.get(pk= int(kifu_id))
+#         context['GAME'] = game
+#         return context
 
-    def get_context_data(self, **kwargs):
-        context = super(GameView, self).get_context_data(**kwargs)
-        kifu_id = kwargs['kifu_id']
-        print("Kifu id = " + kifu_id)
-        game = Kifu.objects.get(pk= int(kifu_id))
-        context['GAME'] = game
-        return context
 
-
-class GameViewSabaki(LoginRequiredMixin, TemplateView):
+class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
     template_name = "game_view_sabaki.html"
 
     def get_context_data(self, **kwargs):
         context = super(GameViewSabaki, self).get_context_data(**kwargs)
-        # if 'kifu_id' in kwargs:
-        #     print(kwargs['kifu_id'])
-        # else:
-        #     print("game id not found")
-
-        print(self.request.path)
+        self.logger.debug("Request path: " + self.request.path)
         if self.request.path == "/game/new/":
             game = Kifu()
             game.save()
@@ -71,7 +67,6 @@ class GameViewSabaki(LoginRequiredMixin, TemplateView):
             context['GAME_ID'] = kifu_id
         else:
             kifu_id = kwargs['kifu_id']
-            # print("Kifu id = " + kifu_id)
             game = Kifu.objects.get(pk = int(kifu_id))
             t = game.game_text
             t = t.replace('\r', '')
@@ -82,10 +77,11 @@ class GameViewSabaki(LoginRequiredMixin, TemplateView):
         return context
 
 
-class UpdateGameView(View):
+class UpdateGameView(LoggerMixin, View):
 
     def post(self, request, *args, **kwargs):
         kifu_id = request.POST['game_id']
+        self.logger.debug("Game update: " + kifu_id)
         sgf = request.POST['game_text']
         kifu = Kifu.objects.get(pk=int(kifu_id))
         kifu.game_text = sgf

@@ -138,3 +138,41 @@ STATICFILES_DIRS = (
     os.path.join(os.path.realpath('.'), 'static').replace('\\', '/'),
     os.path.join(os.path.realpath('.'), 'game').replace('\\', '/'),
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(filename)s[%(lineno)s] %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        # 'django.request': {
+        #     'handlers': ['console'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'cst': {
+            'handlers': ['console', 'debug_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
