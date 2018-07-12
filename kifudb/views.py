@@ -65,6 +65,7 @@ class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
             game.save()
             kifu_id = game.id
             context['GAME_ID'] = kifu_id
+            self.logger.debug("new game loaded");
         else:
             kifu_id = kwargs['kifu_id']
             game = Kifu.objects.get(pk = int(kifu_id))
@@ -74,6 +75,7 @@ class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
             game.game_text = t
             context['GAME_ID'] = kifu_id
             context['GAME'] = game
+            self.logger.debug("game with id " + kifu_id + " loaded")
         return context
 
 
@@ -86,6 +88,7 @@ class UpdateGameView(LoggerMixin, View):
         kifu = Kifu.objects.get(pk=int(kifu_id))
         kifu.game_text = sgf
         kifu.save()
+        self.logger.debug("game saved")
         return HttpResponse('')
 
 
