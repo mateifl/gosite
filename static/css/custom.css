@@ -1,12 +1,4 @@
 body {
 	padding-bottom: 40px;
-    padding-top: 60px;
-}
-
-.wgo-threecols .wgo-player-left, .wgo-threecols  .wgo-player-right  {
-	width: 30%;
-}
-
-.wgo-threecols .wgo-player-center {
-	width: 69%;
+    padding-top: 100px;
 }

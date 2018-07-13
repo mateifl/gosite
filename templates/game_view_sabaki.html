@@ -50,6 +50,10 @@
             }
         });
 
+        const {setting} = sabaki.modules;
+        setting.set("sound.enable", false);
+
+
         {% if GAME is not None %}
             console.log('load game data')
             sabaki.loadContent('{{GAME.game_text}}', 'sgf', { ignoreEncoding: true });
@@ -68,8 +72,6 @@
 			console.log("send update after tool use");
             jQuery.post( "/game-update/", { 'game_text': sgfText, 'game_id': game_id} );
 		});
-
     </script>
-
 </body>
 </html>

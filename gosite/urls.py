@@ -9,12 +9,12 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from kifudb.views import BaseListView, UpdateGameView, GameViewSabaki
 from django.conf import settings
 from django.conf.urls.static import static
-
+import grappelli.urls
 
 urlpatterns = [
     url(r'^$', BaseListView.as_view(), name='home'),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^game/(?P<kifu_id>\d+)', GameViewSabaki.as_view(), name='game-view-sabaki'),
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameViewSabaki.as_view(), name='game-new'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    url(r'^admin_tools/', include('admin_tools.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + grappelli.urls.urlpatterns
