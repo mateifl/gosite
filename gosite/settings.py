@@ -186,3 +186,4 @@ LOGGING = {
     }
 }
 
+MEDIA_ROOT="/home/matei/dev/pyws/gosite/uploads"

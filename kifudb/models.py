@@ -80,7 +80,10 @@ class Kifu(models.Model):
         if self.white_player is not None:
             v = v + " vs. " + self.white_player.first_name + " " + self.white_player.last_name + "(W)"
         if self.one_line_description is not None:
-            v = v + " - " + self.one_line_description
+            if v is "":
+                v = v + self.one_line_description
+            else:
+                v = v + " - " + self.one_line_description
         if v == "":
             v = "Game " + str(self.id)
         return v
@@ -101,6 +104,11 @@ class Position(models.Model):
     game = models.ForeignKey(Kifu)
 
 
-class KifuComment(models.Model):
-    kifu = models.ForeignKey(Kifu)
-    move_number = models.IntegerField()
+class KifuDiagram(models.Model):
+    diagram_title = models.CharField(max_length=256)
+    diagram = models.ImageField(upload_to="uploads/")
+    diagram_text = models.TextField()
+
+    class Meta:
+        verbose_name = "Diagram"
+        verbose_name_plural = "Diagrams"

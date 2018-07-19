@@ -34,7 +34,7 @@
 
         var csrftoken = getCookie('csrftoken');
 
-        if(csrftoken != null)
+        if(csrftoken == null)
             csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
         console.log(csrftoken);
