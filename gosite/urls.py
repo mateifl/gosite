@@ -14,6 +14,8 @@ from django.contrib import admin
 from kifudb.views import BaseListView, UpdateGameView, GameViewSabaki
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+
 import grappelli.urls
 
 urlpatterns = [
@@ -25,4 +27,5 @@ urlpatterns = [
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameViewSabaki.as_view(), name='game-new'),
     url(r'^admin_tools/', include('admin_tools.urls')),
+    url(r'^accounts/login/$', auth_views.login, name='login'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + grappelli.urls.urlpatterns
