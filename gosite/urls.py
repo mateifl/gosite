@@ -27,5 +27,5 @@ urlpatterns = [
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameViewSabaki.as_view(), name='game-new'),
     url(r'^admin_tools/', include('admin_tools.urls')),
-    url(r'^accounts/login/$', auth_views.login, name='login'),
+    url(r'^accounts/login/', auth_views.login, name='login'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + grappelli.urls.urlpatterns

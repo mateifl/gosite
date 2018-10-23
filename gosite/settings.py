@@ -60,7 +60,7 @@ ROOT_URLCONF = 'gosite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.realpath('.'), 'templates').replace('\\', '/'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\', '/'), ],
         'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
