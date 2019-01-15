@@ -9,7 +9,7 @@ from kifudb.utils import LoggerMixin
 def load_games(load_type=None):
     if load_type is None:
         # load last 20 games for the front page
-        return Kifu.objects.all()
+        return Kifu.objects.all()[:20]
     elif load_type[0] == 'Group':
         print("loading games from " + load_type[1])
         return Kifu.objects.filter(groups__slug = load_type[1])
@@ -36,6 +36,7 @@ class BaseListView(LoggerMixin, TemplateView):
         context['KIFUS'] = kifus
 
         groups = KifuGroup.objects.all()
+
         context['GROUPS'] = groups
 
         return context
@@ -97,5 +98,16 @@ class SearchView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
+        groups = KifuGroup.objects.all()
+        context['GROUPS'] = groups
+        return context
 
+
+class SearchResultsView(TemplateView):
+    template_name = "search-results.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+        groups = KifuGroup.objects.all()
+        context['GROUPS'] = groups
         return context
