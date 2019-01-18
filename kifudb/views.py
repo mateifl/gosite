@@ -42,19 +42,6 @@ class BaseListView(LoggerMixin, TemplateView):
         return context
 
 
-# class GameView(LoginRequiredMixin, TemplateView):
-#     template_name = "game_view.html"
-#     model = Kifu
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(GameView, self).get_context_data(**kwargs)
-#         kifu_id = kwargs['kifu_id']
-#         print("Kifu id = " + kifu_id)
-#         game = Kifu.objects.get(pk= int(kifu_id))
-#         context['GAME'] = game
-#         return context
-
-
 class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
     template_name = "game_view_sabaki.html"
 
@@ -104,18 +91,17 @@ class SearchView(LoggerMixin, TemplateView):
         return context
 
 
-class SearchResultsView(FormView):
+class SearchResultsView(FormView, LoggerMixin):
     template_name = "search.html"
     form_class = SearchForm
     success_url = "/search/"
 
     def get_context_data(self, **kwargs):
-        print("SearchResultsView.get_context_data")
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         groups = KifuGroup.objects.all()
         context['GROUPS'] = groups
         return context
 
     def form_valid(self, form):
-        print(form.data)
+        self.logger.debug(form.data)
         return super(SearchResultsView, self).form_valid(form)
