@@ -14,18 +14,21 @@
 			<div class="row">
 				<div class="col-9">
 					<!--GROUPS {{ GROUPS }}-->
-					<form>
+					<form method="post" action="">
+						{% csrf_token %}
+						
 						<div class="form-group">
-							<label for="first_player">First player name:</label>
-							<input type="text" id="first_player" class="form-control"  />
+							<label for="id_first_player">First player name:</label>
+							<input type="text" name="first_player" id="id_first_player" class="form-control"  />
 						</div>
+
 						<div class="form-group">
 							<label for="second_player">Second player name:</label>
-							<input type="text" id="second_player" class="form-control" />
+							<input type="text" name="second_player" id="second_player" class="form-control" />
 						</div>
 						<div class="form-group">
 							<label for="group">Group:</label>
-							<select id="group" class="form-control" >
+							<select id="group" class="form-control" name="group" >
 								<option value="-1"></option>
 								{% for group in GROUPS %}
 								<option value="{{group.id}}">{{group.name}}</option>
@@ -34,8 +37,9 @@
 						</div>
 						<div class="form-group">
 							<label for="description">Description:</label>
-							<input type="text" id="description" class="form-control"  />
+							<input type="text" id="description" class="form-control"  name="description" />
 						</div>
+
 						<button type="submit" class="btn btn-primary">Search</button>
 
 					</form>

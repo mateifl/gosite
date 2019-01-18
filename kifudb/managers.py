@@ -29,7 +29,8 @@ class KifuManager(LoggerMixin, models.Manager):
 
         if description is not None:
             words = description.split()
-            self.logger.debug("Search description: " + words)
+            for word in words:
+                self.logger.debug("Search description: " + word)
             res = list()
 
             for word in words:

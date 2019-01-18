@@ -26,8 +26,8 @@ urlpatterns = [
     url(r'^game/(?P<kifu_id>\d+)', GameViewSabaki.as_view(), name='game-view-sabaki'),
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameViewSabaki.as_view(), name='game-new'),
-    url(r'^search-games/$', SearchView.as_view(), name='search'),
-    url(r'^search-results/$', SearchResultsView.as_view(), name='search-results'),
+    # url(r'^search-games/$', SearchResultsView.as_view(), name='search'),
+    url(r'^search/$', SearchResultsView.as_view(), name='search-results'),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^accounts/login/', auth_views.login, name='login'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + grappelli.urls.urlpatterns
