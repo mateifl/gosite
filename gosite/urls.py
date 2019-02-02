@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^search/$', SearchResultsView.as_view(), name='search-results'),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^accounts/login/', auth_views.login, name='login'),
+    url(r'rest/', include('rest_gosite.urls', namespace='rest'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + grappelli.urls.urlpatterns
