@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'kifudb',
+    'rest_gosite'
 ]
 
 MIDDLEWARE = [
