@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/css/smoothness/jquery-ui-1.8.23.custom.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="/static/css/bootstrap.min-flatly.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="/static/css/custom.css" type="text/css" media="screen, projection">
+    	<script src="{% static 'jquery-3.3.1.min.js' %}"  type="text/javascript" ></script>
+		<title>Go site</title>
+	</head>
+	<body>
+		{% include "header.html" %}
+		<div class="container">
+			<div class="row">
+				<div class="col-9">
+					<!--GROUPS {{ GROUPS }}-->
+					<form method="post" action="">
+						{% csrf_token %}
+						
+						<div class="form-group">
+							<label for="id_first_player">First player name:</label>
+							<input type="text" name="first_player" id="id_first_player" class="form-control"  />
+						</div>
+
+						<div class="form-group">
+							<label for="second_player">Second player name:</label>
+							<input type="text" name="second_player" id="second_player" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label for="group">Group:</label>
+							<select id="group" class="form-control" name="group" >
+								<option value="-1"></option>
+								{% for group in GROUPS %}
+								<option value="{{group.id}}">{{group.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="description">Description:</label>
+							<input type="text" id="description" class="form-control"  name="description" />
+						</div>
+
+						<button type="submit" class="btn btn-primary">Search</button>
+
+					</form>
+				</div>
+				<div class="col-3">
+					<a href="/game/new" class="btn btn-default btn-primary" role="button">New game</a>
+					<h3>Groups</h3>
+                    <div class="list-group">
+                    {% for group in GROUPS %}
+                        <a role="button" class="list-group-item list-group-item-action" href="/group/{{ group.slug }}">{{ group.name }}</a>
+                    {% endfor %}
+                    </div>
+				</div>
+			</div>
+			<hr/>
+			<div class="row">
+				{% include "footer.html" %}
+			</div>
+		</div>
+	</body>
+</html>

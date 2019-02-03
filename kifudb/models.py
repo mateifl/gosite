@@ -2,6 +2,8 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
+from kifudb.managers import KifuManager
+
 
 class KifuGroup(models.Model):
     name = models.CharField(max_length=255)
@@ -70,6 +72,7 @@ class Kifu(models.Model):
     description = models.TextField(null=True, blank=True)
     one_line_description = models.CharField(max_length=255, null=True, blank=True)
     tags = models.ManyToManyField(KifuTag, blank=True)
+    objects = KifuManager()
 
     def get_absolute_url(self):
         return "game/" + str(self.id)

@@ -1,15 +1,17 @@
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from kifudb.models import Kifu, KifuGroup
 from django.views import View
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from kifudb.utils import LoggerMixin
+from kifudb.forms import SearchForm
 
 
 def load_games(load_type=None):
     if load_type is None:
         # load last 20 games for the front page
-        return Kifu.objects.all()
+        return Kifu.objects.all()[:20]
     elif load_type[0] == 'Group':
         print("loading games from " + load_type[1])
         return Kifu.objects.filter(groups__slug = load_type[1])
@@ -34,24 +36,10 @@ class BaseListView(LoggerMixin, TemplateView):
 
         self.logger.debug("Found " + str(len(kifus)) + " games")
         context['KIFUS'] = kifus
-
         groups = KifuGroup.objects.all()
         context['GROUPS'] = groups
 
         return context
-
-
-# class GameView(LoginRequiredMixin, TemplateView):
-#     template_name = "game_view.html"
-#     model = Kifu
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(GameView, self).get_context_data(**kwargs)
-#         kifu_id = kwargs['kifu_id']
-#         print("Kifu id = " + kifu_id)
-#         game = Kifu.objects.get(pk= int(kifu_id))
-#         context['GAME'] = game
-#         return context
 
 
 class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
@@ -92,10 +80,28 @@ class UpdateGameView(LoggerMixin, View):
         return HttpResponse('')
 
 
-class SearchView(TemplateView):
+class SearchView(LoggerMixin, TemplateView):
     template_name = "search.html"
 
     def get_context_data(self, **kwargs):
+        self.logger.debug("SearchView")
         context = super(SearchView, self).get_context_data(**kwargs)
-
+        groups = KifuGroup.objects.all()
+        context['GROUPS'] = groups
         return context
+
+
+class SearchResultsView(FormView, LoggerMixin):
+    template_name = "search.html"
+    form_class = SearchForm
+    success_url = "/search/"
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        groups = KifuGroup.objects.all()
+        context['GROUPS'] = groups
+        return context
+
+    def form_valid(self, form):
+        self.logger.debug(form.data)
+        return super(SearchResultsView, self).form_valid(form)
