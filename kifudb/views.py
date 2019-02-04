@@ -56,7 +56,7 @@ class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
             self.logger.debug("new game loaded");
         else:
             kifu_id = kwargs['kifu_id']
-            game = Kifu.objects.get(pk = int(kifu_id))
+            game = Kifu.objects.get(pk=int(kifu_id))
             t = game.game_text
             t = t.replace('\r', '')
             t = t.replace('\n', '')
