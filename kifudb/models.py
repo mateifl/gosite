@@ -2,7 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
-from kifudb.managers import KifuManager
+from kifudb.managers import KifuManager, PlayerManager
 
 
 class KifuGroup(models.Model):
@@ -50,6 +50,7 @@ class Player(models.Model):
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     rank = models.CharField(max_length=5, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
+    objects = PlayerManager()
 
     def __str__(self):
         v = self.last_name

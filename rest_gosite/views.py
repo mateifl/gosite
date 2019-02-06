@@ -14,6 +14,22 @@ class KifuListRestView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        white_player_name = request.data['white_player']
+        black_player_name = request.data['black_player']
+
+        white_player_list = Player.objects.search(white_player_name)
+        black_player_list = Player.objects.search(black_player_name)
+
+        if len(white_player_list) == 0:
+            request.data['white_player'] = None
+        else:
+            request.data['white_player'] = white_player_list[0]
+
+        if len(black_player_list) == 0:
+            request.data['black_player'] = None
+        else:
+            request.data['black_player'] = black_player_list[0]
+
         serializer = KifuSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

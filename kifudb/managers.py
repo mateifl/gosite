@@ -37,3 +37,26 @@ class KifuManager(LoggerMixin, models.Manager):
                 result = kifu_list.filter()
 
         return kifu_list
+
+
+class PlayerManager(LoggerMixin, models.Manager):
+
+    def search(self, name):
+        names = name.split()
+        self.logger.debug(names)
+
+        if len(names) == 1:
+            player_list = self.filter(last_name__istartswith=names[0])
+        else:
+            player_list = self.filter(first_name__istartswith=names[0]).filter(last_name__istartswith=names[1])
+
+        return player_list
+
+    def create_player(self, name):
+        names = name.split()
+        if len(names) == 1:
+            player = self.create(last_name=names[0])
+        else:
+            player = self.create(first_name=names[0], last_name=names[1])
+        player.save()
+        return player

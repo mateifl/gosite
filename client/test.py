@@ -9,7 +9,11 @@ def parse_file(file_name):
         collection = sgf.parse(f.read())
         print(len(collection.children))
         for child in collection.children:
-            printer.pprint(child.nodes[0].properties)
+            # printer.pprint(child.nodes[0].properties)
+            if "PB" in child.nodes[0].properties:
+                print(child.nodes[0].properties["PB"])
+            if "PW" in child.nodes[0].properties:
+                print(child.nodes[0].properties["PW"])
 
 
 if __name__ == "__main__":
