@@ -3,10 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from kifudb.models import Kifu, Player
-from rest_gosite.serializers import KifuSerializer, PlayerSerializer
+from kifudb.utils import LoggerMixin
+from rest_gosite.serializers import KifuSerializer
 
 
-class KifuListRestView(APIView):
+class KifuListRestView(LoggerMixin, APIView):
 
     def get(self, request, format=None):
         kifus = Kifu.objects.all()
@@ -14,27 +15,34 @@ class KifuListRestView(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        white_player_name = request.data['white_player']
-        black_player_name = request.data['black_player']
+        serializer = KifuSerializer(data=request.data)
+        print(serializer.is_valid())
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(serializer.validated_data)
+        white_player_name = serializer.validated_data['white_player']
+        black_player_name = serializer.validated_data['black_player']
+
 
         white_player_list = Player.objects.search(white_player_name)
         black_player_list = Player.objects.search(black_player_name)
 
         if len(white_player_list) == 0:
-            request.data['white_player'] = None
+            white = Player.objects.create_player(white_player_name)
+            white.save()
         else:
-            request.data['white_player'] = white_player_list[0]
+            white = white_player_list[0]
 
         if len(black_player_list) == 0:
-            request.data['black_player'] = None
+            black = Player.objects.create_player(black_player_name)
+            black.save()
         else:
-            request.data['black_player'] = black_player_list[0]
+            black = black_player_list[0]
 
-        serializer = KifuSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        self.logger.debug("Players set ")
+
+        Kifu.objects.create(serializer.validated_data)
+        return Response(serializer.data)
 
 
 class KifuRestView(APIView):

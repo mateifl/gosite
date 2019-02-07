@@ -58,6 +58,18 @@ class Player(models.Model):
             v = v + " " + self.first_name
         return v
 
+    def __unicode__(self):
+        v = ""
+        if self.first_name is not None:
+            v = self.first_name
+
+        if self.last_name is not None:
+            if v is not "":
+                v = v + " " + self.last_name
+            else:
+                v = self.last_name
+        return v
+
     class Meta:
         verbose_name = "Player"
         verbose_name_plural = "Players"
