@@ -25,7 +25,6 @@ class BaseListView(LoggerMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BaseListView, self).get_context_data(**kwargs)
-        self.logger.debug(self.kwargs)
         kifus = []
         if not self.kwargs:
             kifus = load_games()

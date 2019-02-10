@@ -6,7 +6,8 @@ from kifudb.utils import LoggerMixin
 class KifuManager(LoggerMixin, models.Manager):
 
     def search(self, first_player_name, second_player_name, description, group):
-
+        # self.logger.debug("Search criteria: " + first_player_name + " " + second_player_name
+        #                   + " " + description + " " + group)
         kifu_list = self.all()
 
         if first_player_name is not None:
@@ -24,17 +25,24 @@ class KifuManager(LoggerMixin, models.Manager):
                                          Q(black_player__last_name__icontains=second_player_name))
 
         if group is not None:
-            self.logger.debug("Search group name: " + group)
-            kifu_list = kifu_list.filter(groups__name__icontains=group)
+            self.logger.debug("Search group: " + str(group))
+            kifu_list = kifu_list.filter(groups__pk=group)
 
         if description is not None:
             words = description.split()
+            # search will be done by matching every word
             for word in words:
                 self.logger.debug("Search description: " + word)
             res = list()
 
+            criteria = None
+
             for word in words:
-                result = kifu_list.filter()
+                criteria = criteria | Q(description__icontains=word) | Q(one_line_description__icontains=word)
+                # result = kifu_list.filter(Q(description__icontains=word) | Q(one_line_description__icontains=word))
+                # res.extend(result)
+
+            kifu_list = kifu_list.filter(criteria)
 
         return kifu_list
 
