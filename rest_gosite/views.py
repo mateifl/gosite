@@ -15,6 +15,7 @@ class KifuListRestView(LoggerMixin, APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        self.logger.debug("POST GAME")
         serializer = KifuSerializer(data=request.data)
         print(serializer.is_valid())
         if not serializer.is_valid():
@@ -22,7 +23,6 @@ class KifuListRestView(LoggerMixin, APIView):
         print(serializer.validated_data)
         white_player_name = serializer.validated_data['white_player']
         black_player_name = serializer.validated_data['black_player']
-
 
         white_player_list = Player.objects.search(white_player_name)
         black_player_list = Player.objects.search(black_player_name)

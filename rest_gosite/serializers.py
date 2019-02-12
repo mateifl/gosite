@@ -11,8 +11,8 @@ from kifudb.models import Kifu, Player
 class KifuSerializer(serializers.Serializer):
     white_player = serializers.CharField(max_length=200, allow_null=True)
     black_player = serializers.CharField(max_length=200, allow_null=True)
-    one_line_description = serializers.CharField(max_length=200, allow_null=True)
-    description = serializers.CharField(max_length=200)
+    one_line_description = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
+    description = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
     game_text = serializers.CharField()
     game_date = serializers.DateTimeField(allow_null=True)
-    groups = serializers.CharField(max_length=200, allow_null=True)
+    groups = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
