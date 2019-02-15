@@ -11,7 +11,15 @@ rest_url = "http://127.0.0.1:8000/rest/kifu/"
 
 def parse_file(file_name):
     with open(file_name) as f:
-        game_text = f.read()
+        game_text = ""
+        line = f.readline()
+        while line != "":
+            if line[-1] == "\n":
+                game_text += line[:-1]
+            else:
+                game_text += line
+            line = f.readline()
+
         d = dict()
         d['game_text'] = game_text
         collection = sgf.parse(game_text)
@@ -28,21 +36,31 @@ def parse_file(file_name):
     return None
 
 
-def post_content(data):
+def post_content(data, group):
+    data["groups"] = group
+    data["description"] = None
+    data["one_line_description"] = None
     payload = json.dumps(data, indent=2)
     print(payload)
     r = requests.post(rest_url, json=payload)
     print(r.status_code)
 
+
 if __name__ == "__main__":
     # send the data using the API
-
+    f = open(path_to_sgfs + "desc.txt")
+    group = f.readline()
+    if group[-1] == "\n":
+        group = group[:-1]
     files = os.listdir(path_to_sgfs)
 
     for file in files:
+        if not file.endswith("sgf"):
+            continue
+        print("Parsing: " + path_to_sgfs + file)
         d = parse_file(path_to_sgfs + file)
         if d is None:
             continue
         else:
-            post_content(d)
+            post_content(d, group)
 
