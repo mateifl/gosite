@@ -96,6 +96,7 @@ class SearchResultsView(FormView, LoggerMixin):
     success_url = "/search/"
 
     def get_context_data(self, **kwargs):
+        self.logger.debug("get_context_data")
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         groups = KifuGroup.objects.all()
         context['GROUPS'] = groups
@@ -103,4 +104,5 @@ class SearchResultsView(FormView, LoggerMixin):
 
     def form_valid(self, form):
         self.logger.debug(form.data)
+
         return super(SearchResultsView, self).form_valid(form)
