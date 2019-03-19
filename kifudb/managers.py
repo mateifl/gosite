@@ -63,7 +63,7 @@ class PlayerManager(LoggerMixin, models.Manager):
         names = name.split()
         if len(names) == 1:
             player = self.create(last_name=names[0])
-        else:
-            player = self.create(first_name=names[0], last_name=names[1])
+        elif len(names) >  1:
+            player = self.create(first_name=" ".join(names[:-1]), last_name=names[-1])
         player.save()
         return player
