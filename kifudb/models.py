@@ -45,30 +45,16 @@ class KifuTag(models.Model):
 
 
 class Player(models.Model):
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    last_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=255)
     rank = models.CharField(max_length=5, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     objects = PlayerManager()
 
     def __str__(self):
-        v = self.last_name
-        if self.last_name is not None:
-            v = v + " " + self.first_name
-        return v
+        return self.name
 
     def __unicode__(self):
-        v = ""
-        if self.first_name is not None:
-            v = self.first_name
-
-        if self.last_name is not None:
-            if v is not "":
-                v = v + " " + self.last_name
-            else:
-                v = self.last_name
-        return v
+        return self.name
 
     class Meta:
         verbose_name = "Player"
@@ -93,9 +79,9 @@ class Kifu(models.Model):
     def to_string(self):
         v = ""
         if self.black_player is not None:
-            v = v + " " + self.black_player.first_name + " " + self.black_player.last_name + "(B)"
+            v = v + " " + self.black_player.name + "(B)"
         if self.white_player is not None:
-            v = v + " vs. " + self.white_player.first_name + " " + self.white_player.last_name + "(W)"
+            v = v + " vs. " + self.white_player.name + "(W)"
         if self.one_line_description is not None:
             if v is "":
                 v = v + self.one_line_description
