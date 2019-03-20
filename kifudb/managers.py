@@ -53,11 +53,11 @@ class PlayerManager(LoggerMixin, models.Manager):
         if len(names) == 1:
             player_list = self.filter(name__icontains=names[0])
         elif len(names) > 1:
-            player_set = set()            
+            player_set = set()
             for n in names:
                 player_set.update(self.filter(name__icontains=n))
             player_list = list(player_set)
-        else: 
+        else:
             player_list = list()
 
         return player_list
