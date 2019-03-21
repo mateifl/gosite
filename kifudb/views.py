@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from kifudb.utils import LoggerMixin
 from kifudb.forms import SearchForm
-
+from kifudb.utils import check_string_has_value_dict
 
 def load_games(load_type=None):
     if load_type is None:
@@ -100,6 +100,7 @@ class SearchResultsView(FormView, LoggerMixin):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
+            print("POST")
             return self.form_valid(form, **kwargs)
         else:
             return self.form_invalid(form)
@@ -109,28 +110,37 @@ class SearchResultsView(FormView, LoggerMixin):
         context = super(SearchResultsView, self).get_context_data(**kwargs)
         groups = KifuGroup.objects.all()
         context['GROUPS'] = groups
-        # print(context['KIFUS'])
+
+        first_player = check_string_has_value_dict(self.kwargs, "fp")
+        second_player = check_string_has_value_dict(self.kwargs, "sp")
+        # group_id = int(self.kwargs["g"])
+
+        
+        kifus = Kifu.objects.search(first_player, second_player, None, None)
+        self.logger.debug("Games: " + str(kifus.count()))
+        context['GAMES'] = kifus
         return context
 
     def form_valid(self, form, **kwargs):
         self.logger.debug("Search parameters: ")
         self.logger.debug(form.cleaned_data)
-        first_player = None
-        if 'first_player' in form.cleaned_data.keys():
+
+        first_player = "x"
+        if 'first_player' in form.cleaned_data.keys() and len(form.cleaned_data['first_player']) > 0:
             first_player = form.cleaned_data['first_player']
-        second_player = None
-        if 'second_player' in form.cleaned_data.keys():
+
+        second_player = "x"
+        if 'second_player' in form.cleaned_data.keys() and len(form.cleaned_data['second_player']) > 0:
             second_player = form.cleaned_data['second_player']
-        group = None
+
+        group = "x"
         if 'group' in form.cleaned_data.keys():
             group = form.cleaned_data['group']
-        description = None
-        if 'description' in form.cleaned_data.keys():
+
+        description = "x"
+        if 'description' in form.cleaned_data.keys() and len(form.cleaned_data['description']) > 0:
             description = form.cleaned_data['description']
-        print(reverse('search-results'))
-        self.success_url = reverse('search-results', first_player, second_player, group, description )
-        print(self.success_url)
-        kifus = Kifu.objects.search(form.cleaned_data['first_player'], form.cleaned_data['second_player'],
-                                    form.cleaned_data['description'], None)
-        self.logger.debug("Found " + str(len(kifus)))
+
+        self.success_url = reverse('search-results', args=[first_player, second_player, group, description])
+        self.logger.debug(self.success_url)
         return super(SearchResultsView, self).form_valid(form)

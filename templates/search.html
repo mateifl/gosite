@@ -13,7 +13,6 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-9">
-					<!--GROUPS {{ GROUPS }}-->
 					<form method="post" action="">
 						{% csrf_token %}
 						
@@ -43,6 +42,12 @@
 						<button type="submit" class="btn btn-primary">Search</button>
 
 					</form>
+					<hr/>
+					<table>
+						{% for game in GAMES %}
+						<tr><td><a href="/{{ game.get_absolute_url }}">{{ game.to_string }}</a></td></tr>
+						{% endfor %}
+					</table>
 				</div>
 				<div class="col-3">
 					<a href="/game/new" class="btn btn-default btn-primary" role="button">New game</a>
