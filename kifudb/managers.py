@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import Q
-from django.db.models.functions import Concat
 from kifudb.utils import LoggerMixin
 
 
@@ -13,18 +12,19 @@ class KifuManager(LoggerMixin, models.Manager):
             self.logger.debug("Search first player name: " + first_player_name)
             kifu_list = kifu_list.filter(Q(white_player__name__icontains=first_player_name) |
                                          Q(black_player__name__icontains=first_player_name))
-
+        else:
+            self.logger.debug("First player name not set (None)")
         if second_player_name is not None:
             self.logger.debug("Search second player name: " + second_player_name)
             kifu_list = kifu_list.filter(Q(white_player__name__icontains=second_player_name) |
                                          Q(black_player__name__icontains=second_player_name))
-
-        if group is not None:
+        else:
+            self.logger.debug("Second player name not set (None)")
+        if group is not None and group > -1:
             self.logger.debug("Search group: " + str(group))
             kifu_list = kifu_list.filter(groups__pk=group)
 
         if description is not None:
-            self.logger.debug("Search description")
             words = description.split()
             # search will be done by matching every word
             for word in words:
@@ -40,7 +40,7 @@ class KifuManager(LoggerMixin, models.Manager):
                     criteria = criteria | Q(description__icontains=word) | Q(one_line_description__icontains=word)
 
             kifu_list = kifu_list.filter(criteria)
-
+        self.logger.info("Games %d ", kifu_list.count())
         return kifu_list
 
 

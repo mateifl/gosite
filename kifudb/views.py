@@ -7,7 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from kifudb.utils import LoggerMixin
 from kifudb.forms import SearchForm
-from kifudb.utils import check_string_has_value_dict
+from kifudb.utils import check_string_has_value_dict, string_to_none
+
 
 def load_games(load_type=None):
     if load_type is None:
@@ -111,13 +112,18 @@ class SearchResultsView(FormView, LoggerMixin):
         groups = KifuGroup.objects.all()
         context['GROUPS'] = groups
 
-        first_player = check_string_has_value_dict(self.kwargs, "fp")
-        second_player = check_string_has_value_dict(self.kwargs, "sp")
-        # group_id = int(self.kwargs["g"])
+        if "fp" not in self.kwargs and "sp" not in self.kwargs and "g" not in self.kwargs and "d" not in self.kwargs:
+            return context
 
-        
-        kifus = Kifu.objects.search(first_player, second_player, None, None)
-        self.logger.debug("Games: " + str(kifus.count()))
+        first_player = string_to_none(check_string_has_value_dict(self.kwargs, "fp"))
+        second_player = string_to_none(check_string_has_value_dict(self.kwargs, "sp"))
+        group_id = None
+        if "g" in self.kwargs.keys() and self.kwargs["g"] != "x":
+            group_id = int(self.kwargs["g"])
+        description = string_to_none(check_string_has_value_dict(self.kwargs, "d"))
+        print(first_player, second_player, group_id, description)
+        kifus = Kifu.objects.search(first_player, second_player, description, group_id)
+
         context['GAMES'] = kifus
         return context
 
@@ -125,22 +131,15 @@ class SearchResultsView(FormView, LoggerMixin):
         self.logger.debug("Search parameters: ")
         self.logger.debug(form.cleaned_data)
 
-        first_player = "x"
-        if 'first_player' in form.cleaned_data.keys() and len(form.cleaned_data['first_player']) > 0:
-            first_player = form.cleaned_data['first_player']
-
-        second_player = "x"
-        if 'second_player' in form.cleaned_data.keys() and len(form.cleaned_data['second_player']) > 0:
-            second_player = form.cleaned_data['second_player']
+        first_player = check_string_has_value_dict(form.cleaned_data, "first_player")
+        second_player = check_string_has_value_dict(form.cleaned_data, "second_player")
 
         group = "x"
         if 'group' in form.cleaned_data.keys():
             group = form.cleaned_data['group']
 
-        description = "x"
-        if 'description' in form.cleaned_data.keys() and len(form.cleaned_data['description']) > 0:
-            description = form.cleaned_data['description']
+        description = check_string_has_value_dict(form.cleaned_data, "description")
 
         self.success_url = reverse('search-results', args=[first_player, second_player, group, description])
-        self.logger.debug(self.success_url)
+        self.logger.debug("Search url: " + self.success_url)
         return super(SearchResultsView, self).form_valid(form)
