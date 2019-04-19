@@ -33,23 +33,23 @@ def parse_file(file_name):
             if "GN" in child.nodes[0].properties and len(child.nodes[0].properties["GN"]) > 0:
                 d["one_line_description"] = child.nodes[0].properties["GN"][0]
         return d
-    return None
 
 
 def post_content(data, group):
     data["groups"] = group
     data["description"] = None
     data["one_line_description"] = None
+    data["game_date"] = None
     payload = json.dumps(data, indent=2)
     print(payload)
-    r = requests.post(rest_url, json=payload)
+    r = requests.post(rest_url, data=payload, headers={'content-type': 'application/json'})
     print(r.status_code)
 
 
 if __name__ == "__main__":
     # send the data using the API
-    f = open(path_to_sgfs + "desc.txt")
-    group = f.readline()
+    desc_file = open(path_to_sgfs + "desc.txt")
+    group = desc_file.readline()
     if group[-1] == "\n":
         group = group[:-1]
     files = os.listdir(path_to_sgfs)

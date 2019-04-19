@@ -26,7 +26,8 @@ urlpatterns = [
     url(r'^game/(?P<kifu_id>\d+)', GameViewSabaki.as_view(), name='game-view-sabaki'),
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameViewSabaki.as_view(), name='game-new'),
-    url(r'^search/$', SearchResultsView.as_view(), name='search-results'),
+    url(r'^search/$', SearchResultsView.as_view(), name='search-page'),
+    url(r'^search-results/(?P<fp>\w{0,50})/(?P<sp>\w{0,50})/(?P<g>\-?\w{0,50})/(?P<d>\w{0,50})$', SearchResultsView.as_view(), name='search-results'),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^accounts/login/', auth_views.login, name='login'),
     url(r'rest/', include('rest_gosite.urls', namespace='rest'))

@@ -17,33 +17,35 @@ class KifuListRestView(LoggerMixin, APIView):
     def post(self, request, format=None):
         self.logger.debug("POST GAME")
         serializer = KifuSerializer(data=request.data)
-        print(serializer.is_valid())
+        self.logger.debug("Serializer valid: " + str(serializer.is_valid()))
         if not serializer.is_valid():
+            self.logger.error(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        print(serializer.validated_data)
-        white_player_name = serializer.validated_data['white_player']
-        black_player_name = serializer.validated_data['black_player']
+        self.logger.debug(serializer.validated_data)
+        white = self.set_player(serializer.validated_data, "white_player")
+        black = self.set_player(serializer.validated_data, "black_player")
+        one_line_description = serializer.validated_data['one_line_description']
 
-        white_player_list = Player.objects.search(white_player_name)
-        black_player_list = Player.objects.search(black_player_name)
+        if white is None and black is None and one_line_description is None:
+            self.logger.error("Players and short description cannot be null")
 
-        if len(white_player_list) == 0:
-            white = Player.objects.create_player(white_player_name)
-            white.save()
-        else:
-            white = white_player_list[0]
-
-        if len(black_player_list) == 0:
-            black = Player.objects.create_player(black_player_name)
-            black.save()
-        else:
-            black = black_player_list[0]
-
-        self.logger.debug("Players set ")
-
-        Kifu.objects.create(serializer.validated_data)
+        self.logger.debug("Players set")
+    
+        data = { "one_line_description": one_line_description, "white_player": white, "black_player": black }
+        Kifu.objects.create(**data)
         return Response(serializer.data)
 
+    def set_player(self, data, player):
+        player_name = data[player]
+        if player_name is None:
+            return None
+        player_list = Player.objects.search(player_name)
+        if len(player_list) == 0:
+            player = Player.objects.create_player(player_name)
+            player.save()
+        else:
+            player = player_list[0]
+        return player
 
 class KifuRestView(APIView):
 

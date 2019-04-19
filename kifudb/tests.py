@@ -46,3 +46,4 @@ class KifuTests(TestCase):
     def tearDown(self):
         Player.objects.all().delete()
         KifuGroup.objects.all().delete()
+
