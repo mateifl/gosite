@@ -58,7 +58,7 @@ ROOT_URLCONF = 'gosite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\', '/'), ],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
@@ -135,8 +135,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
 
 STATICFILES_DIRS = (
-    os.path.join(os.path.realpath('.'), 'static').replace('\\', '/'),
-    os.path.join(os.path.realpath('.'), 'game').replace('\\', '/'),
+    os.path.join(os.path.realpath('.'), 'static'),
+    os.path.join(os.path.realpath('.'), 'game'),
 )
 
 LOGGING = {
