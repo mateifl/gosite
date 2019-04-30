@@ -41,7 +41,7 @@ class KifuListRestView(LoggerMixin, APIView):
             return None
         player_list = Player.objects.search(player_name)
         if len(player_list) == 0:
-            player = Player.objects.create_player(player_name)
+            player = Player.objects.create(name=player_name)
             player.save()
         else:
             player = player_list[0]
