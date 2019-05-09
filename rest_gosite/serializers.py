@@ -7,7 +7,6 @@ from kifudb.models import Kifu, Player
 #         model = Player
 #         fields = ('id', 'first_name', 'last_name')
 
-
 class KifuSerializer(serializers.Serializer):
     white_player = serializers.CharField(max_length=200, allow_null=True)
     black_player = serializers.CharField(max_length=200, allow_null=True)

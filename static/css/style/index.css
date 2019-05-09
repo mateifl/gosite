@@ -1,3 +1,5 @@
+@import url('../node_modules/@sabaki/shudan/css/goban.css');
+
 #main {
         z-index: 10;
     }
@@ -11,10 +13,10 @@
     }
     #goban {
         box-sizing: border-box;
-        position: absolute;
-        left: 50%;
-        top: 50%;
         box-shadow: 0 5px 20px rgba(20, 0, 15, .8);
+    }
+    #goban.crosshair {
+        cursor: crosshair;
 }
 
 header, #bar .bar {
@@ -98,7 +100,7 @@ header, #bar .bar {
         border-left: 6px solid transparent;
     }
     header.hotspot .hotspot { top: 0; }
-    header > img, #headermenu, header .undo {
+    header > img, #headermenu {
         display: block;
         position: absolute;
         left: 50%;
@@ -109,7 +111,7 @@ header, #bar .bar {
         margin-top: -11px;
     }
     header > img { cursor: pointer; }
-    #headermenu, header .undo {
+    #headermenu {
         left: auto;
         right: 0;
         width: 32px;
@@ -118,22 +120,14 @@ header, #bar .bar {
         margin-left: 0;
         margin-top: -21px;
     }
-    header .undo {
-        right: auto;
-        left: 0;
-        top: 61px;
-        transition: top .2s, left .2s;
-    }
-    header .undo img, #headermenu img {
+    #headermenu img {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         filter: invert(100%);
     }
-    header.undoable .undo { top: 50%; }
-    header.hotspot .undo { left: 32px; }
-    #headermenu:hover, header .undo:hover {
+    #headermenu:hover {
         background: #222;
 }
 
@@ -153,7 +147,7 @@ header, #bar .bar {
     #bar .bar { transform: translateY(-40px); }
     #bar .bar.current { transform: none; }
     #bar header:not(.current) { transform: translateY(40px); }
-    #bar .bar.hidecontent > * { visibility: hidden; }
+    #bar .bar.hidecontent > * { display: none; }
     #bar .bar .close {
         display: block;
         position: absolute;
@@ -198,7 +192,7 @@ header, #bar .bar {
         background: #711111;
     }
     #scoring .result button:active, #estimator .result button:active {
-        transform: translateY(4%);        
+        transform: translateY(4%);
 }
 
 #find button {
@@ -313,12 +307,12 @@ header, #bar .bar {
 }
 
 #leftsidebar {
-        display: none;
+        visibility: hidden;
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
-        background: #181818;
+        background: #111;
         z-index: 10;
     }
     #leftsidebar .verticalresizer {
@@ -331,7 +325,7 @@ header, #bar .bar {
         z-index: 10;
     }
     .leftsidebar #leftsidebar {
-        display: block;
+        visibility: visible;
     }
     .leftsidebar #main {
         left: 400px;
@@ -381,7 +375,7 @@ header, #bar .bar {
         left: 0;
         right: 0;
         height: 40px;
-        background: #222;
+        background: #181818;
         overflow: hidden;
     }
     #console .input select {
@@ -414,15 +408,21 @@ header, #bar .bar {
         display: block;
 }
 
-.coord {
-        padding: 0 5px;
-        background: #101010;
+.comment-coord, .comment-variation {
+        padding: 0 .3em;
+        background: #050505;
         color: white;
         border-radius: 3px;
         cursor: default;
     }
-    .coord:hover {
+    .comment-coord:hover {
         background: #0082F0;
+    }
+    .comment-variation:hover {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkaPrwHwAEbwJzLYyQSgAAAABJRU5ErkJggg==);
+        background-size: 0 100%;
+        background-repeat: no-repeat;
+        transition: .5s background-size linear;
 }
 
 #sidebar {
@@ -431,8 +431,12 @@ header, #bar .bar {
         top: 0;
         bottom: 0;
         right: 0;
+        grid-template-rows: 0 1fr;
         background: #111;
         z-index: 10;
+    }
+    #sidebar.showwinrate {
+        grid-template-rows: auto 1fr;
     }
     #sidebar .verticalresizer {
         position: absolute;
@@ -443,11 +447,52 @@ header, #bar .bar {
         cursor: ew-resize;
         z-index: 10;
     }
+    #sidebar .graphproperties {
+        position: relative;
+    }
     .sidebar #sidebar {
-        display: block;
+        display: grid;
     }
     .sidebar #main {
         right: 200px;
+}
+
+#winrategraph {
+        position: relative;
+        visibility: hidden;
+        height: 50px;
+        background: #181818;
+        box-shadow: 10px 0 10px #111;
+        overflow: hidden;
+        z-index: 3;
+    }
+    #winrategraph .horizontalresizer {
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+        height: 5px;
+        cursor: ns-resize;
+        z-index: 10;
+    }
+    #winrategraph svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .showwinrate #winrategraph {
+        visibility: visible;
+    }
+    #winrategraph .marker {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #0082F0;
+        border-radius: 50%;
+        margin-top: -3px;
+        margin-left: -3px;
 }
 
 #slider {
@@ -456,6 +501,7 @@ header, #bar .bar {
         right: 0;
         bottom: 0;
         width: 25px;
+        height: 100%;
         background: #111;
         box-shadow: 0 0 10px #111;
         z-index: 2;
@@ -520,10 +566,17 @@ header, #bar .bar {
     #graph svg:not(:active) > * {
         transition: transform .3s;
     }
-    #graph svg path.hover {
-        stroke: white;
-        stroke-width: 3px;
-        stroke-linecap: square;
+    #graph svg .node {
+        stroke: #111;
+        stroke-width: 1px;
+    }
+    #graph svg .node.hover {
+        stroke: #777;
+        stroke-width: 2px;
+    }
+    #graph svg .node.current {
+        stroke: #eee;
+        stroke-width: 2px;
 }
 
 #properties {
@@ -537,7 +590,7 @@ header, #bar .bar {
         background: #181818;
         box-shadow: 10px 0 10px #111;
         transition: height .2s, color .2s, background .2s;
-        z-index: 2;
+        z-index: 3;
     }
     #properties .horizontalresizer {
         position: absolute;
@@ -653,6 +706,19 @@ header, #bar .bar {
     #properties .inner .header.movestatus img.movestatus {
         display: inline;
     }
+    #properties .inner .header .help {
+        display: inline-flex;
+        padding: 2px;
+        vertical-align: bottom;
+    }
+    #properties .inner .header .help img {
+        filter: invert(100%);
+        opacity: .5;
+        transition: opacity .2s;
+    }
+    #properties .inner .header .help:hover img {
+        opacity: .7;
+    }
     #properties .inner .header .edit-button {
         position: relative;
         top: -1px;
@@ -691,11 +757,11 @@ header, #bar .bar {
     .drawer h2 {
         font-weight: lighter;
     }
-    .drawer input, .drawer select, button {
+    .drawer input, .drawer textarea, .drawer select, button {
         background: #111;
         color: #eee;
     }
-    .drawer input:focus, .drawer select:focus,
+    .drawer input:focus, .drawer textarea:focus, .drawer select:focus,
     button:hover:not([class^="pika-"]), button:focus:not([class^="pika-"]) {
         background: #1a1a1a;
     }
@@ -879,8 +945,7 @@ header, #bar .bar {
     #preferences form > div label select {
         margin-left: 10px;
     }
-    #preferences form > div.general,
-    #preferences form > div.themes {
+    #preferences .tab-content > div {
         padding-top: 1.5em;
     }
     #preferences form > div.general ul {
@@ -902,27 +967,33 @@ header, #bar .bar {
     #preferences form > div.general > p {
         clear: both;
     }
-    #preferences form > div.themes label span {
-        display: inline-block;
+    #preferences form > div.themes .userpaths {
+        display: grid;
+        column-gap: 1em;
+        grid-template: 1fr 1fr / 1fr 1fr;
+        grid-auto-flow: column;
+    }
+    #preferences .path-input-item label {
+        display: flex;
+    }
+    #preferences .path-input-item label span {
         width: 10em;
+        line-height: 2;
         text-align: right;
     }
-    #preferences form > div.themes input {
-        width: 40%;
+    #preferences .path-input-item input {
+        flex-grow: 1;
         margin-left: 10px;
     }
-    #preferences form > div.themes .browse,
-    #preferences form > div.themes .invalid {
-        display: inline-block;
-        position: relative;
-        top: 2px;
+    #preferences .path-input-item .browse,
+    #preferences .path-input-item .invalid {
         margin-left: 10px;
         opacity: .5;
         filter: invert(100%);
         transition: opacity .2s;
     }
-    #preferences form > div.themes .browse:active,
-    #preferences form > div.themes .invalid {
+    #preferences .path-input-item .browse:active,
+    #preferences .path-input-item .invalid {
         opacity: 1;
     }
     #preferences form > div.themes .meta {
@@ -961,8 +1032,16 @@ header, #bar .bar {
     #preferences form.engines > div.engines {
         display: block;
     }
-    #preferences .engines-list {
-        overflow: auto;
+    #preferences .gtp-console-log ul {
+        display: flex;
+        margin: 0 0 .5rem;
+    }
+    #preferences .gtp-console-log .preferences-item {
+        line-height: 2;
+    }
+    #preferences .gtp-console-log .path-input-item {
+        flex-grow: 1;
+        margin-left: 10px;
 }
 
 #cleanmarkup form {
@@ -972,6 +1051,24 @@ header, #bar .bar {
         float: left;
         padding-top: 1.5em;
         width: 33%;
+}
+
+#advancedproperties form {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        display: grid;
+        grid-template-rows: 1fr auto;
+        grid-row-gap: 1rem;
+    }
+    #advancedproperties form > p:last-child {
+        margin-bottom: 0;
+    }
+    #advancedproperties form > p:last-child .add {
+        float: left;
+        margin-right: 5px;
 }
 
 #gamechooser {
@@ -1049,7 +1146,7 @@ header, #bar .bar {
         border: 5px solid #ca933a;
         margin-top: 5px;
         padding: 1px;
-        background: url('/static/game/img/goban/board.png') center #ECB55A;
+        background: url('../node_modules/@sabaki/shudan/css/board.png') center #ECB55A;
         background-size: 200%;
     }
     #gamechooser li span {
@@ -1112,12 +1209,13 @@ header, #bar .bar {
         background: #1a1a1a;
 }
 
-.engines-list {
+.engines-list, .properties-list {
         border: 1px solid #111;
-        height: 21em;
-        margin: 1.5em 0;
         background: #1a1a1a;
         overflow: auto;
+    }
+    .engines-list {
+        height: 18em;
     }
     .engines-list ul {
         margin: 0 !important;
@@ -1174,7 +1272,8 @@ header, #bar .bar {
         transform: translate(-50%, -50%);
         filter: invert(100%);
     }
-    .engines-list li a.remove:hover {
+    .engines-list li a.remove:hover,
+    .engines-list li a.remove:focus {
         background: #E81123;
     }
     .engines-list li a.remove:active {
@@ -1182,6 +1281,66 @@ header, #bar .bar {
     }
     .engines-list li a.browse:active {
         opacity: 1;
+}
+
+.properties-list table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .properties-list tr:nth-child(2n) {
+        background: #1f1f1f;
+    }
+    .properties-list th {
+        padding: 5px 10px;
+        width: 1px;
+        font-family: Consolas, Menlo, Monaco, 'Ubuntu Mono', monospace;
+        font-weight: normal;
+        text-align: right;
+        vertical-align: top;
+    }
+    .properties-list th em {
+        font-style: normal;
+        opacity: .5;
+    }
+    .properties-list td textarea {
+        display: block;
+        box-sizing: border-box;
+        padding-right: 18px;
+        width: 100%;
+        background: transparent;
+        overflow: hidden;
+    }
+    .properties-list td textarea:focus {
+        padding-right: 10px;
+        background: #111;
+        overflow: auto;
+    }
+    .properties-list td.action {
+        padding: 7px 10px;
+        width: 16px;
+        vertical-align: top;
+    }
+    .properties-list td.action a {
+        display: block;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+    }
+    .properties-list td.action a img {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        filter: invert(100%);
+    }
+    .properties-list td.action a.remove:hover,
+    .properties-list td.action a.remove:focus {
+        background: #E81123;
+    }
+    .properties-list td.action a.remove:active {
+        background: #C60001;
 }
 
 #info-overlay {
@@ -1203,4 +1362,14 @@ header, #bar .bar {
     #info-overlay.show {
         opacity: 1;
         transition: opacity .1s;
+}
+
+/* Override Shudan styles */
+
+.shudan-vertex .shudan-heatlabel::first-line {
+    font-weight: bold;
+}
+
+.shudan-vertex .shudan-heat {
+    transition: none;
 }
