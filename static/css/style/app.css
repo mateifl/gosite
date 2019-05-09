@@ -16,7 +16,7 @@ html, body {
 }
 
 body, input, button, select, option, textarea {
-    font: menu;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     font-size: 14px;
     line-height: 1.5;
 }
@@ -130,7 +130,7 @@ form p, form ul li {
         height: 1.5em;
         width: 1.5em;
         margin-right: 5px;
-        vertical-align: top;
+        vertical-align: text-bottom;
     }
     input[type="checkbox"]::before {
         content: '';
@@ -139,7 +139,7 @@ form p, form ul li {
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('../node_modules/octicons/build/svg/check.svg') center / auto 16px no-repeat;
+        background: url('/static/node_modules/octicons/build/svg/check.svg') center / auto 16px no-repeat;
         opacity: 0;
     }
     input[type="checkbox"]:checked::before {
