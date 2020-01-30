@@ -11,7 +11,7 @@ class KifuTests(TestCase):
     player4 = None
     group = None
 
-    def setUp(self):
+    def setUp(self):    
         self.player1 = Player.objects.create(name='Lee Chang Ho')
         self.player2 = Player.objects.create(name='Cho Chikun')
         self.player3 = Player.objects.create(name='Lee Sedol')

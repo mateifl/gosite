@@ -43,32 +43,40 @@ class BaseListView(LoggerMixin, TemplateView):
         return context
 
 
-class GameViewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
+class GameNewSabaki(LoggerMixin, LoginRequiredMixin, TemplateView):
     template_name = "game_view_sabaki.html"
 
     def get_context_data(self, **kwargs):
         context = super(GameViewSabaki, self).get_context_data(**kwargs)
         self.logger.debug("Request path: " + self.request.path)
-        if self.request.path == "/game/new/":
-            game = Kifu()
-            game.save()
-            kifu_id = game.id
-            context['GAME_ID'] = kifu_id
-            self.logger.debug("new game loaded");
-        else:
-            kifu_id = kwargs['kifu_id']
-            game = Kifu.objects.get(pk=int(kifu_id))
-            t = game.game_text
-            t = t.replace('\r', '')
-            t = t.replace('\n', '')
-            game.game_text = t
-            context['GAME_ID'] = kifu_id
-            context['GAME'] = game
-            self.logger.debug("game with id " + kifu_id + " loaded")
+        game = Kifu()
+        game.save()
+        kifu_id = game.id
+        context['GAME_ID'] = kifu_id
+        self.logger.debug("new game loaded");
         return context
 
 
-class UpdateGameView(LoggerMixin, View):
+class GameViewSabaki(LoggerMixin, TemplateView):
+    template_name = "game_view_sabaki.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(GameViewSabaki, self).get_context_data(**kwargs)
+        self.logger.debug("Request path: " + self.request.path)
+
+        kifu_id = kwargs['kifu_id']
+        game = Kifu.objects.get(pk=int(kifu_id))
+        t = game.game_text
+        t = t.replace('\r', '')
+        t = t.replace('\n', '')
+        game.game_text = t
+        context['GAME_ID'] = kifu_id
+        context['GAME'] = game
+        self.logger.debug("game with id " + kifu_id + " loaded")
+        return context
+
+
+class UpdateGameView(LoggerMixin, LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         kifu_id = request.POST['game_id']
