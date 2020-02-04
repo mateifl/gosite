@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-from kifudb.models import Kifu, KifuGroup
+from kifudb.models import Kifu, KifuGroup, KifuInfo
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -151,3 +151,24 @@ class SearchResultsView(FormView, LoggerMixin):
         self.success_url = reverse('search-results', args=[first_player, second_player, group, description])
         self.logger.debug("Search url: " + self.success_url)
         return super(SearchResultsView, self).form_valid(form)
+
+
+class GameInfoView(LoggerMixin, TemplateView):
+    template_name = "game_info.html"
+
+    def get_context_data(self, **kwargs):
+        self.logger.debug("GameInfoView")
+        context = super(GameInfoView, self).get_context_data(**kwargs)
+        kifu_id = kwargs['kifu_id']
+        self.logger.debug("kifu_id = " + kifu_id)
+        try:
+            game_info = KifuInfo.objects.filter(game__pk=int(kifu_id))
+            
+            self.logger.debug("Game info found " + game_info[0].id)
+        except:
+            self.logger.warning("Game info for " + kifu_id)
+            game = Kifu.objects.get(pk=int(kifu_id))
+            game_info = KifuInfo(game=game)
+            game_info.save()
+        context['kifu_info'] = game_info
+        return context

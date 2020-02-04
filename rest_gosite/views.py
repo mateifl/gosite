@@ -25,13 +25,14 @@ class KifuListRestView(LoggerMixin, APIView):
         white = self.set_player(serializer.validated_data, "white_player")
         black = self.set_player(serializer.validated_data, "black_player")
         one_line_description = serializer.validated_data['one_line_description']
-
+        game_text = serializer.validated_data['game_text']
         if white is None and black is None and one_line_description is None:
             self.logger.error("Players and short description cannot be null")
 
         self.logger.debug("Players set")
     
         data = { "one_line_description": one_line_description, "white_player": white, "black_player": black }
+        data['game_text'] = game_text
         Kifu.objects.create(**data)
         return Response(serializer.data)
 

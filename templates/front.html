@@ -14,12 +14,13 @@
 			<div class="row">
 				<div class="col-9">
 					<h3>Latest games added</h3>
-                    <table class="table table-hover">
+                    <table class="table table-sm">
                     {% for kifu in KIFUS %}
                         <tr>
                             <td>
-                                <a href="/{{ kifu.get_absolute_url }}">{{ kifu.to_string }}</a>
-                            </td>
+                                <a class="btn btn-default" role="button" href="/{{ kifu.get_absolute_url }}">{{ kifu.to_string }}</a>
+							</td>
+							<td><a class="btn btn-block btn-info" role="button" href="/info/{{ kifu.id }}">Info</a></td>
                         </tr>
                     {% endfor %}
                     </table>

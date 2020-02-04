@@ -4,7 +4,7 @@ import sgf
 import json
 
 
-path_to_sgfs = "/home/mateifl/go/sgfs/"
+path_to_sgfs = "c:\\dev\\pyws\\gosite\\games\\"
 rest_url = "http://127.0.0.1:8000/rest/kifu/"
 # read and parse the sgf file
 

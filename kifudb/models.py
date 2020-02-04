@@ -67,6 +67,7 @@ class Kifu(models.Model):
     place = models.CharField(max_length=255, null=True, blank=True)
     white_player = models.ForeignKey(Player, related_name="white", null=True, blank=True)
     black_player = models.ForeignKey(Player, related_name="black", null=True, blank=True)
+    result = models.TextField(null=True, blank=True)
     groups = models.ManyToManyField(KifuGroup, blank=True)
     description = models.TextField(null=True, blank=True)
     one_line_description = models.CharField(max_length=255, null=True, blank=True)
@@ -115,3 +116,12 @@ class KifuDiagram(models.Model):
     class Meta:
         verbose_name = "Diagram"
         verbose_name_plural = "Diagrams"
+
+
+class KifuInfo(models.Model):
+    comment = models.TextField()
+    game = models.OneToOneField(Kifu, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Game information"
+        verbose_name_plural = "Game information"

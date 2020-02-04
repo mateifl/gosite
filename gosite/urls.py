@@ -11,7 +11,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from kifudb.views import BaseListView, UpdateGameView, GameViewSabaki, SearchView, SearchResultsView, GameNewSabaki
+from kifudb.views import BaseListView, UpdateGameView, GameViewSabaki, SearchView, SearchResultsView, GameNewSabaki, GameInfoView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^game/(?P<kifu_id>\d+)', GameViewSabaki.as_view(), name='game-view-sabaki'),
     url(r'^game-update/', UpdateGameView.as_view(), name='game-update'),
     url(r'^game/new/$', GameNewSabaki.as_view(), name='game-new'),
+    url(r'^info/(?P<kifu_id>\d+)$', GameInfoView.as_view(), name='game-info'),
     url(r'^search/$', SearchResultsView.as_view(), name='search-page'),
     url(r'^search-results/(?P<fp>\w{0,50})/(?P<sp>\w{0,50})/(?P<g>\-?\w{0,50})/(?P<d>\w{0,50})$', SearchResultsView.as_view(), name='search-results'),
     url(r'^admin_tools/', include('admin_tools.urls')),
